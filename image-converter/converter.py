@@ -180,8 +180,9 @@ class ConverterApp:
         self.root = root
         root.title("Image Converter, Resizer, and Remover")
         root.geometry("560x900")
-        root.resizable(False, False)
+        root.resizable(True, True)
         root.configure(bg=BG)
+        root.after(50, self._zoom_window)
 
         self.input_path: Path | None = None
         self.source_image: Image.Image | None = None
@@ -208,6 +209,15 @@ class ConverterApp:
 
         self._configure_styles()
         self._build_ui()
+
+    def _zoom_window(self):
+        """Expand to fill the screen like clicking the green zoom button."""
+        try:
+            self.root.wm_attributes("-zoomed", True)
+        except tk.TclError:
+            sw = self.root.winfo_screenwidth()
+            sh = self.root.winfo_screenheight()
+            self.root.geometry(f"{sw}x{sh - 30}+0+30")
 
     def _configure_styles(self):
         style = ttk.Style()
